@@ -1,9 +1,11 @@
     import * as THREE from 'three';
+    import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 
     function main() {
       const canvas = document.querySelector('#c');
       const renderer = new THREE.WebGLRenderer({antialias: true, canvas});
-
+      
+      const maxPixelCount = 1920 * 1080
       const fov = 75;
       const aspect = 2;  // the canvas default
       const near = 0.1;
@@ -65,8 +67,14 @@
       function resizeRendererToDisplaySize(renderer) {
         const canvas = renderer.domElement;
         const pixelRatio = window.devicePixelRatio
-        const width = Math.floor( canvas.clientWidth   * pixelRatio );
-        const height = Math.floor( canvas.clientHeight * pixelRatio );
+        let width = Math.floor( canvas.clientWidth   * pixelRatio );
+        let height = Math.floor( canvas.clientHeight * pixelRatio );
+        const pixelCount = width * height
+        const renderScale = pixelCount > maxPixelCount ? Math.sqrt(maxPixelCount / pixelCount) : 1;
+        width = Math.floor(width * renderScale);
+        height = Math.floor(height * renderScale);
+        
+        
         const needResize = canvas.width !== width || canvas.height !== height;
         if (needResize) {
           renderer.setSize(width, height, false);
